@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbi UI Playground - Unlimited Design Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .brand {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .brand span {
+            background: rgba(255,255,255,0.2);
+            padding: 0.1rem 0.8rem;
+            border-radius: 12px;
+        }
+
+        .rabbit-logo {
+            font-size: 2.5rem;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .tagline {
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .contact a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+        }
+
+        /* Controls row */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .challenge-selector {
+            background: rgba(255,255,255,0.15);
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.85rem;
+        }
+
+        select {
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            border: none;
+            background: white;
+            margin-left: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .auto-save-badge {
+            background: #2d3748;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #68d391;
+        }
+
+        /* Editor area */
+        .editor-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .editor-panel {
+            background: #1a1a2e;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            background: #16213e;
+            padding: 0.5rem 1rem;
+            display: flex;
+            gap: 0.5rem;
+            border-bottom: 1px solid #0f3460;
+        }
+
+        .editor-tab {
+            background: none;
+            border: none;
+            color: #aaa;
+            padding: 0.3rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .editor-tab.active {
+            background: #0f3460;
+            color: white;
+        }
+
+        .editor-content {
+            height: 450px;
+        }
+
+        .editor-pane {
+            display: none;
+            height: 100%;
+        }
+
+        .editor-pane.active {
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            background: #0a0a1a;
+            color: #d4d4d4;
+            border: none;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+            resize: none;
+            outline: none;
+        }
+
+        .preview-panel {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            background: #16213e;
+            padding: 0.5rem 1rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 500px;
+            border: none;
+            background: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        /* Submission section */
+        .submission-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .submission-section h3 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .submission-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .submission-form input, .submission-form select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 150px;
+            font-size: 0.85rem;
+        }
+
+        .submission-item {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .status {
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            font-size: 0.85rem;
+        }
+
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status.info {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            margin-top: 2rem;
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-joke {
+            background: rgba(255,255,255,0.1);
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 900px) {
+            .editor-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .preview-frame {
+                height: 400px;
+            }
+            .brand {
+                font-size: 1.8rem;
+            }
+            .rabbit-logo {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand">
+                <span class="rabbit-logo">🐇</span>
+                <span>Rabbi UI Playground</span>
+                <span class="rabbit-logo">🐇</span>
+            </div>
+            <div class="tagline">Design. Code. Create. No limits.</div>
+            <div class="contact">📧 <a href="mailto:rabbibrandsend@gmail.com">rabbibrandsend@gmail.com</a></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary" onclick="loadRandomUI()">Random UI</button>
+            <button class="btn btn-secondary" onclick="loadPreviousUI()">Previous</button>
+            <button class="btn btn-secondary" onclick="loadNextUI()">Next</button>
+            <div class="challenge-selector">
+                Library: 
+                <select id="savedUISelect" onchange="loadSavedUI(this.value)"></select>
+            </div>
+            <button class="btn btn-warning" onclick="saveCurrentUI()">Save Current</button>
+            <div class="auto-save-badge" id="autoSaveStatus">Auto-saving</div>
+        </div>
+
+        <!-- Main Editor + Preview -->
+        <div class="editor-wrapper">
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <button class="editor-tab active" data-editor="html">HTML</button>
+                    <button class="editor-tab" data-editor="css">CSS</button>
+                    <button class="editor-tab" data-editor="js">JavaScript</button>
+                </div>
+                <div class="editor-content">
+                    <div class="editor-pane active" data-editor="html">
+                        <textarea id="htmlEditor" placeholder="<div>Your HTML here...</div>"></textarea>
+                    </div>
+                    <div class="editor-pane" data-editor="css">
+                        <textarea id="cssEditor" placeholder="/* Your CSS here */"></textarea>
+                    </div>
+                    <div class="editor-pane" data-editor="js">
+                        <textarea id="jsEditor" placeholder="// Your JavaScript here"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="preview-panel">
+                <div class="preview-header">
+                    <span>Live Preview</span>
+                    <span style="font-size: 11px;">Updates automatically</span>
+                </div>
+                <iframe id="preview" class="preview-frame" title="preview" srcdoc="<html><body style='display:flex;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;color:#666;'>Write code and it appears here</body></html>"></iframe>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="runCode()">Run Code</button>
+            <button class="btn btn-warning" onclick="resetToCurrentUI()">Reset</button>
+            <button class="btn btn-danger" onclick="clearAllCode()">Clear Editor</button>
+        </div>
+
+        <!-- Submission Section -->
+        <div class="submission-section">
+            <h3>Share Your Creation</h3>
+            <div class="submission-form">
+                <input type="text" id="userName" placeholder="Your Name / GitHub Username">
+                <input type="url" id="repoUrl" placeholder="GitHub Repo URL (optional)">
+                <input type="url" id="demoUrl" placeholder="Live Demo URL (optional)">
+                <button class="btn btn-primary" onclick="submitSolution()">Submit</button>
+            </div>
+            <div id="statusMsg"></div>
+            <div id="submissionsContainer">Loading community creations...</div>
+        </div>
+
+        <footer>
+            <p>🐇 Your code stays with you. We don't see it, touch it, or run away with it. Rabbi only provides the base for you to be as free as a bird.</p>
+            <div class="footer-joke">"The only thing we save is your sanity. And maybe a carrot." - Rabbi 🐇</div>
+        </footer>
+    </div>
+
+    <script>
+        // ============ UNLIMITED UI SOURCES (4 Free External APIs) ============
+        
+        // Master collection of all UI components (grows infinitely)
+        let uiLibrary = [];
+        let currentIndex = 0;
+        let saveTimer = null;
+        let autoSaveTimer = null;
+        
+        // API Sources (free, no API key needed)
+        const apiSources = [
+            {
+                name: 'UIverse',
+                url: 'https://api.uiverse.io/api/components?limit=20',
+                parser: (data) => data.map(item => ({
+                    title: item.name || 'UI Component',
+                    html: item.html || '<div class="card">Sample UI</div>',
+                    css: item.css || '',
+                    js: item.js || ''
+                }))
+            },
+            {
+                name: 'DummyJSON',
+                url: 'https://dummyjson.com/products?limit=10',
+                parser: (data) => data.products.map(product => ({
+                    title: product.title,
+                    html: `<div class="product-card"><h3>${product.title}</h3><p>${product.description.substring(0, 80)}</p><span class="price">$${product.price}</span></div>`,
+                    css: `.product-card { padding: 1rem; border-radius: 12px; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 1rem; }
+                           .price { color: #667eea; font-weight: bold; display: block; margin-top: 0.5rem; }`,
+                    js: ''
+                }))
+            },
+            {
+                name: 'JSONPlaceholder',
+                url: 'https://jsonplaceholder.typicode.com/posts?_limit=10',
+                parser: (data) => data.map(post => ({
+                    title: post.title.substring(0, 30),
+                    html: `<div class="post-card"><h4>${post.title}</h4><p>${post.body.substring(0, 80)}...</p><button>Read More</button></div>`,
+                    css: `.post-card { background: white; padding: 1rem; border-radius: 12px; margin: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+                           button { background: #667eea; color: white; border: none; padding: 0.3rem 1rem; border-radius: 20px; cursor: pointer; }`,
+                    js: `document.querySelectorAll('button').forEach(btn => btn.onclick = () => alert('Post clicked!'));`
+                }))
+            },
+            {
+                name: 'FakeStore',
+                url: 'https://fakestoreapi.com/products?limit=10',
+                parser: (data) => data.map(product => ({
+                    title: product.title.substring(0, 25),
+                    html: `<div class="store-card"><div class="icon">🛍️</div><h4>${product.title.substring(0, 25)}</h4><div class="rating">★ ${product.rating?.rate || 4.5}</div><span class="price">$${product.price}</span></div>`,
+                    css: `.store-card { background: linear-gradient(135deg, #667eea15, #764ba215); padding: 1rem; border-radius: 16px; text-align: center; backdrop-filter: blur(10px); margin: 0.5rem; }
+                           .icon { font-size: 2rem; }
+                           .price { font-weight: bold; color: #48bb78; display: block; margin-top: 0.5rem; }
+                           .rating { color: #f6ad55; font-size: 0.8rem; }`,
+                    js: ''
+                }))
+            }
+        ];
+        
+        // Fallback UI templates (when APIs fail)
+        const fallbackUIs = [
+            { title: "Profile Card", html: `<div class="profile"><div class="avatar">👤</div><h3>Alex Morgan</h3><p>Frontend Developer</p><button>Follow</button></div>`, css: `.profile { text-align: center; padding: 1.5rem; background: white; border-radius: 20px; max-width: 300px; margin: 0 auto; } .avatar { font-size: 4rem; } button { background: #667eea; color: white; border: none; padding: 0.5rem 1.5rem; border-radius: 30px; margin-top: 0.5rem; cursor: pointer; }`, js: `document.querySelector('button')?.addEventListener('click', () => alert('Followed!'));` },
+            { title: "Alert Banner", html: `<div class="alert">🎉 New feature available! <button>Dismiss</button></div>`, css: `.alert { background: #48bb78; color: white; padding: 1rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; } button { background: white; border: none; padding: 0.3rem 0.8rem; border-radius: 20px; cursor: pointer; }`, js: `document.querySelector('button')?.addEventListener('click', (e) => e.target.closest('.alert').style.display = 'none');` },
+            { title: "Progress Bar", html: `<div class="progress-container"><div class="progress-bar" style="width: 0%"></div></div><button onclick="increase()">Increase</button>`, css: `.progress-container { background: #e2e8f0; border-radius: 20px; overflow: hidden; } .progress-bar { background: #667eea; height: 30px; width: 0%; transition: width 0.3s; } button { margin-top: 0.5rem; }`, js: `function increase() { let bar = document.querySelector('.progress-bar'); let width = parseInt(bar.style.width) || 0; if (width < 100) { width += 10; bar.style.width = width + '%'; } }` },
+            { title: "Todo List", html: `<div><input type="text" id="todoInput" placeholder="Add task..."><button onclick="addTodo()">Add</button><ul id="todoList"></ul></div>`, css: `input { padding: 0.5rem; border-radius: 8px; border: 1px solid #ddd; } button { padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; } ul { list-style: none; margin-top: 1rem; } li { padding: 0.5rem; background: #f8f9fa; margin-bottom: 0.25rem; border-radius: 8px; }`, js: `function addTodo() { let input = document.getElementById('todoInput'); if(input.value) { let li = document.createElement('li'); li.textContent = input.value; document.getElementById('todoList').appendChild(li); input.value = ''; } }` },
+            { title: "Star Rating", html: `<div class="rating"><span data-rating="1">☆</span><span data-rating="2">☆</span><span data-rating="3">☆</span><span data-rating="4">☆</span><span data-rating="5">☆</span></div><p id="ratingValue"></p>`, css: `.rating span { font-size: 2rem; cursor: pointer; color: #ddd; } .rating span:hover, .rating span.active { color: #f6ad55; }`, js: `document.querySelectorAll('.rating span').forEach(star => { star.addEventListener('click', function() { let rating = this.dataset.rating; document.getElementById('ratingValue').textContent = 'You rated: ' + rating + ' stars'; document.querySelectorAll('.rating span').forEach(s => s.classList.remove('active')); for(let i=0; i<rating; i++) document.querySelectorAll('.rating span')[i].classList.add('active'); }); });` }
+        ];
+        
+        // Load from all APIs and merge
+        async function loadUnlimitedUI() {
+            showStatus('Loading UI components from external sources...', 'info');
+            
+            let allUI = [...fallbackUIs];
+            
+            for (const source of apiSources) {
+                try {
+                    const response = await fetch(source.url);
+                    if (response.ok) {
+                        const data = await response.json();
+                        const parsed = source.parser(data);
+                        allUI.push(...parsed);
+                    }
+                } catch (e) {
+                    // Silently fail
+                }
+            }
+            
+            // Remove duplicates by title
+            uiLibrary = [];
+            const titles = new Set();
+            for (const ui of allUI) {
+                if (!titles.has(ui.title)) {
+                    titles.add(ui.title);
+                    uiLibrary.push(ui);
+                }
+            }
+            
+            // Load saved UIs from localStorage
+            const saved = localStorage.getItem('rabbi_saved_uis');
+            if (saved) {
+                const savedUIs = JSON.parse(saved);
+                uiLibrary.push(...savedUIs);
+            }
+            
+            showStatus(`Loaded ${uiLibrary.length} UI components!`, 'success', true);
+            return uiLibrary;
+        }
+        
+        function showStatus(msg, type = 'info', autoClear = true) {
+            const statusDiv = document.getElementById('statusMsg');
+            statusDiv.innerHTML = `<div class="status ${type}">${msg}</div>`;
+            if (autoClear) setTimeout(() => {
+                if (document.getElementById('statusMsg').innerHTML.includes(msg))
+                    document.getElementById('statusMsg').innerHTML = '';
+            }, 2000);
+        }
+        
+        // Core functions
+        function loadUI(index) {
+            if (uiLibrary.length === 0) return;
+            currentIndex = ((index % uiLibrary.length) + uiLibrary.length) % uiLibrary.length;
+            const ui = uiLibrary[currentIndex];
+            
+            document.getElementById('htmlEditor').value = ui.html || '';
+            document.getElementById('cssEditor').value = ui.css || '';
+            document.getElementById('jsEditor').value = ui.js || '';
+            
+            runCode();
+            updateUISelector();
+        }
+        
+        function loadRandomUI() {
+            if (uiLibrary.length === 0) return;
+            const randomIndex = Math.floor(Math.random() * uiLibrary.length);
+            loadUI(randomIndex);
+        }
+        
+        function loadPreviousUI() {
+            loadUI(currentIndex - 1);
+        }
+        
+        function loadNextUI() {
+            loadUI(currentIndex + 1);
+        }
+        
+        function saveCurrentUI() {
+            const currentUI = {
+                title: `Custom ${new Date().toLocaleTimeString()}`,
+                html: document.getElementById('htmlEditor').value,
+                css: document.getElementById('cssEditor').value,
+                js: document.getElementById('jsEditor').value
+            };
+            
+            let saved = localStorage.getItem('rabbi_saved_uis');
+            let savedUIs = saved ? JSON.parse(saved) : [];
+            savedUIs.push(currentUI);
+            localStorage.setItem('rabbi_saved_uis', JSON.stringify(savedUIs));
+            
+            uiLibrary.push(currentUI);
+            updateUISelector();
+            
+            showStatus('Current UI saved to your library!', 'success', true);
+        }
+        
+        function updateUISelector() {
+            const select = document.getElementById('savedUISelect');
+            select.innerHTML = '<option value="">Browse all UIs</option>';
+            uiLibrary.forEach((ui, idx) => {
+                const option = document.createElement('option');
+                option.value = idx;
+                option.textContent = `${idx + 1}. ${ui.title.substring(0, 40)}`;
+                select.appendChild(option);
+            });
+        }
+        
+        function loadSavedUI(index) {
+            if (index !== '') loadUI(parseInt(index));
+        }
+        
+        function runCode() {
+            const html = document.getElementById('htmlEditor').value;
+            const css = document.getElementById('cssEditor').value;
+            const js = document.getElementById('jsEditor').value;
+            
+            const fullDoc = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <style>${css}</style>
+                </head>
+                <body>
+                    ${html}
+                    <script>${js}<\/script>
+                </body>
+                </html>
+            `;
+            
+            document.getElementById('preview').srcdoc = fullDoc;
+        }
+        
+        function resetToCurrentUI() {
+            if (uiLibrary[currentIndex]) {
+                document.getElementById('htmlEditor').value = uiLibrary[currentIndex].html || '';
+                document.getElementById('cssEditor').value = uiLibrary[currentIndex].css || '';
+                document.getElementById('jsEditor').value = uiLibrary[currentIndex].js || '';
+                runCode();
+            }
+        }
+        
+        function clearAllCode() {
+            document.getElementById('htmlEditor').value = '';
+            document.getElementById('cssEditor').value = '';
+            document.getElementById('jsEditor').value = '';
+            runCode();
+        }
+        
+        // Auto-save to localStorage every 2 seconds
+        function setupAutoSave() {
+            if (autoSaveTimer) clearInterval(autoSaveTimer);
+            autoSaveTimer = setInterval(() => {
+                const draft = {
+                    html: document.getElementById('htmlEditor').value,
+                    css: document.getElementById('cssEditor').value,
+                    js: document.getElementById('jsEditor').value,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('rabbi_editor_draft', JSON.stringify(draft));
+                const badge = document.getElementById('autoSaveStatus');
+                badge.style.opacity = '1';
+                setTimeout(() => {
+                    if (document.getElementById('autoSaveStatus'))
+                        document.getElementById('autoSaveStatus').style.opacity = '0.6';
+                }, 200);
+            }, 2000);
+        }
+        
+        function loadAutoSaveDraft() {
+            const draft = localStorage.getItem('rabbi_editor_draft');
+            if (draft) {
+                const data = JSON.parse(draft);
+                if (data.html) document.getElementById('htmlEditor').value = data.html;
+                if (data.css) document.getElementById('cssEditor').value = data.css;
+                if (data.js) document.getElementById('jsEditor').value = data.js;
+                runCode();
+            }
+        }
+        
+        // Editor tab switching
+        document.querySelectorAll('.editor-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const editorType = tab.dataset.editor;
+                document.querySelectorAll('.editor-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.editor-pane').forEach(pane => pane.classList.remove('active'));
+                document.querySelector(`.editor-pane[data-editor="${editorType}"]`).classList.add('active');
+            });
+        });
+        
+        // Submission functions
+        function submitSolution() {
+            const userName = document.getElementById('userName').value.trim();
+            const repoUrl = document.getElementById('repoUrl').value.trim();
+            const demoUrl = document.getElementById('demoUrl').value.trim();
+            const statusDiv = document.getElementById('statusMsg');
+            
+            if (!userName) {
+                showStatus('Please enter your name', 'error', true);
+                return;
+            }
+            
+            const currentUI = uiLibrary[currentIndex];
+            const submission = {
+                userName: userName,
+                uiTitle: currentUI?.title || 'Custom UI',
+                repoUrl: repoUrl || 'Not provided',
+                demoUrl: demoUrl || 'Not provided',
+                date: new Date().toISOString()
+            };
+            
+            let submissions = JSON.parse(localStorage.getItem('rabbi_submissions') || '[]');
+            submissions.push(submission);
+            localStorage.setItem('rabbi_submissions', JSON.stringify(submissions));
+            
+            showStatus('Submitted! Download submissions.json to share on GitHub.', 'success', false);
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.textContent = 'Download submissions.json';
+            downloadBtn.style.marginLeft = '1rem';
+            downloadBtn.style.padding = '0.3rem 0.8rem';
+            downloadBtn.style.background = '#4299e1';
+            downloadBtn.style.color = 'white';
+            downloadBtn.style.border = 'none';
+            downloadBtn.style.borderRadius = '8px';
+            downloadBtn.onclick = () => downloadSubmissions();
+            statusDiv.querySelector('.status')?.appendChild(downloadBtn);
+            
+            displaySubmissions();
+            
+            document.getElementById('userName').value = '';
+            document.getElementById('repoUrl').value = '';
+            document.getElementById('demoUrl').value = '';
+            
+            setTimeout(() => {
+                if (document.getElementById('statusMsg').innerHTML.includes('Submitted'))
+                    document.getElementById('statusMsg').innerHTML = '';
+            }, 5000);
+        }
+        
+        function downloadSubmissions() {
+            const submissions = JSON.parse(localStorage.getItem('rabbi_submissions') || '[]');
+            const dataStr = JSON.stringify(submissions, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            const link = document.createElement('a');
+            link.setAttribute('href', dataUri);
+            link.setAttribute('download', 'submissions.json');
+            link.click();
+        }
+        
+        function displaySubmissions() {
+            const container = document.getElementById('submissionsContainer');
+            const submissions = JSON.parse(localStorage.getItem('rabbi_submissions') || '[]');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = '<p style="color:#718096;">No submissions yet. Build something and share!</p>';
+                return;
+            }
+            
+            container.innerHTML = submissions.slice().reverse().slice(0, 10).map(sub => `
+                <div class="submission-item">
+                    <div>
+                        <strong>${escapeHtml(sub.userName)}</strong> built <em>${escapeHtml(sub.uiTitle)}</em>
+                        <div style="font-size:0.7rem; color:#a0aec0;">${new Date(sub.date).toLocaleString()}</div>
+                    </div>
+                    <div>
+                        ${sub.repoUrl !== 'Not provided' ? `<a href="${escapeHtml(sub.repoUrl)}" target="_blank">Repo</a>` : ''}
+                        ${sub.demoUrl !== 'Not provided' ? `<a href="${escapeHtml(sub.demoUrl)}" target="_blank" style="margin-left:0.5rem;">Demo</a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Live run on any editor change (debounced)
+        let runTimeout;
+        function debouncedRun() {
+            clearTimeout(runTimeout);
+            runTimeout = setTimeout(runCode, 500);
+        }
+        
+        document.getElementById('htmlEditor')?.addEventListener('input', debouncedRun);
+        document.getElementById('cssEditor')?.addEventListener('input', debouncedRun);
+        document.getElementById('jsEditor')?.addEventListener('input', debouncedRun);
+        
+        // Initialize everything
+        async function init() {
+            setupAutoSave();
+            loadAutoSaveDraft();
+            await loadUnlimitedUI();
+            if (uiLibrary.length > 0) loadUI(0);
+            displaySubmissions();
+        }
+        
+        init();
+    </script>
+</body>
+</html>
